@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatFlow - Profile</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d5a4d;
+            --primary-light: #3d7a6a;
+            --primary-dark: #1d3a2d;
+            --accent: #e8956f;
+            --accent-light: #f5b899;
+            --bg-main: #f8f6f3;
+            --bg-card: #ffffff;
+            --text-primary: #2a2a2a;
+            --text-secondary: #6b6b6b;
+            --text-tertiary: #9a9a9a;
+            --border: #e5e3df;
+            --shadow: rgba(45, 90, 77, 0.08);
+            --online: #4ecb71;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 60px var(--shadow);
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 20px 24px;
+            color: white;
+            position: relative;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+
+        .header-title {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 40px;
+            color: white;
+            margin-bottom: 20px;
+            position: relative;
+            font-family: 'Bricolage Grotesque', sans-serif;
+            box-shadow: 0 12px 32px rgba(232, 149, 111, 0.3);
+        }
+
+        .camera-btn {
+            position: absolute;
+            bottom: -8px;
+            right: -8px;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border: 3px solid white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .camera-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .camera-btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .profile-name {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .profile-status {
+            font-size: 15px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .profile-bio {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-size: 14px;
+            opacity: 0.9;
+            text-align: center;
+            max-width: 280px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            padding: 24px;
+            animation: fadeInUp 0.6s ease-out 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-item {
+            background: var(--bg-main);
+            padding: 20px 16px;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .stat-value {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Settings Section */
+        .settings-section {
+            padding: 0 24px 24px;
+        }
+
+        .section-title {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 13px;
+        }
+
+        .settings-list {
+            background: var(--bg-main);
+            border-radius: 16px;
+            overflow: hidden;
+            animation: fadeInUp 0.6s ease-out 0.3s backwards;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item:hover {
+            background: rgba(45, 90, 77, 0.03);
+        }
+
+        .setting-item:active {
+            background: rgba(45, 90, 77, 0.06);
+        }
+
+        .setting-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 16px;
+        }
+
+        .setting-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--primary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-title {
+            font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+            font-family: 'Bricolage Grotesque', sans-serif;
+        }
+
+        .setting-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .setting-arrow {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-tertiary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: var(--border);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--primary);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-switch.active::after {
+            left: 25px;
+        }
+
+        /* Logout Button */
+        .logout-section {
+            padding: 0 24px 100px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 16px;
+            background: transparent;
+            border: 2px solid var(--accent);
+            border-radius: 16px;
+            color: var(--accent);
+            font-size: 16px;
+            font-weight: 600;
+            font-family: 'Bricolage Grotesque', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out 0.4s backwards;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(232, 149, 111, 0.3);
+        }
+
+        .logout-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 480px;
+            width: 100%;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 24px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: var(--text-tertiary);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item.active svg {
+            fill: var(--primary);
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-top">
+                <h1 class="header-title">Profile</h1>
+                <button class="icon-btn">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+            </div>
+            <div class="profile-card">
+                <div class="profile-avatar">
+                    JD
+                    <div class="camera-btn">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                </div>
+                <h2 class="profile-name">John Doe</h2>
+                <p class="profile-status">Available</p>
+                <p class="profile-bio">Living life one message at a time ✨</p>
+            </div>
+        </header>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value">127</div>
+                <div class="stat-label">Chats</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">2.4K</div>
+                <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">89</div>
+                <div class="stat-label">Groups</div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3 class="section-title">Account Settings</h3>
+            <div class="settings-list">
+                <div class="setting-item">
+                    <div class="setting-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-title">Account Information</div>
+                        <div class="setting-subtitle">Update your details</div>
+                    </div>
+                    <svg class="setting-arrow" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-title">Privacy & Security</div>
+                        <div class="setting-subtitle">Control your privacy</div>
+                    </div>
+                    <svg class="setting-arrow" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-title">Notifications</div>
+                        <div class="setting-subtitle">Manage alerts</div>
+                    </div>
+                    <div class="toggle-switch active"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3 class="section-title">Preferences</h3>
+            <div class="settings-list">
+                <div class="setting-item">
+                    <div class="setting-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-title">Dark Mode</div>
+                        <div class="setting-subtitle">Easy on the eyes</div>
+                    </div>
+                    <div class="toggle-switch"></div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-title">Chat Sounds</div>
+                        <div class="setting-subtitle">Message notifications</div>
+                    </div>
+                    <div class="toggle-switch active"></div>
+                </div>
+                <div class="setting-item">
+                    <div class="setting-icon">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                    </div>
+                    <div class="setting-info">
+                        <div class="setting-title">Archive Messages</div>
+                        <div class="setting-subtitle">Auto-archive old chats</div>
+                    </div>
+                    <svg class="setting-arrow" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="logout-section">
+            <button class="logout-btn">Log Out</button>
+        </div>
+
+        <nav class="bottom-nav">
+            <a href="index.html" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                <span class="nav-label">Chats</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                <span class="nav-label">Status</span>
+            </a>
+            <a href="#" class="nav-item">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                <span class="nav-label">Calls</span>
+            </a>
+            <a href="profile.html" class="nav-item active">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="nav-label">Profile</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        // Toggle switches
+        const toggles = document.querySelectorAll('.toggle-switch');
+        toggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                toggle.classList.toggle('active');
+            });
+        });
+    </script>
+</body>
+</html>
