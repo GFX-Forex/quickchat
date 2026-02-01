@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatFlow - Sarah Anderson</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d5a4d;
+            --primary-light: #3d7a6a;
+            --primary-dark: #1d3a2d;
+            --accent: #e8956f;
+            --accent-light: #f5b899;
+            --bg-main: #f8f6f3;
+            --bg-card: #ffffff;
+            --text-primary: #2a2a2a;
+            --text-secondary: #6b6b6b;
+            --text-tertiary: #9a9a9a;
+            --border: #e5e3df;
+            --shadow: rgba(45, 90, 77, 0.08);
+            --online: #4ecb71;
+            --message-sent: #2d5a4d;
+            --message-received: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 60px var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            padding: 16px 20px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            animation: slideDown 0.4s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .back-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .contact-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .contact-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: white;
+            position: relative;
+            font-family: 'Bricolage Grotesque', sans-serif;
+        }
+
+        .contact-avatar.online::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--online);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+        }
+
+        .contact-details h2 {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .contact-status {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .icon-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Messages Area */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #f8f6f3 0%, #faf9f7 100%);
+        }
+
+        .date-divider {
+            text-align: center;
+            margin: 24px 0 16px;
+            position: relative;
+        }
+
+        .date-divider::before,
+        .date-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .date-divider::before {
+            left: 0;
+        }
+
+        .date-divider::after {
+            right: 0;
+        }
+
+        .date-label {
+            display: inline-block;
+            background: var(--bg-card);
+            padding: 6px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .message-group {
+            margin-bottom: 16px;
+            animation: fadeInUp 0.4s ease-out backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-group:nth-child(2) { animation-delay: 0.1s; }
+        .message-group:nth-child(3) { animation-delay: 0.15s; }
+        .message-group:nth-child(4) { animation-delay: 0.2s; }
+        .message-group:nth-child(5) { animation-delay: 0.25s; }
+
+        .message-group.sent {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .message-group.received {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-bottom: 4px;
+            position: relative;
+            animation: pop 0.3s ease-out backwards;
+        }
+
+        @keyframes pop {
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .message-group.sent .message-bubble {
+            background: var(--message-sent);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-group.received .message-bubble {
+            background: var(--message-received);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .message-text {
+            font-size: 15px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message-time {
+            font-size: 11px;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .message-group.sent .message-time {
+            color: rgba(255, 255, 255, 0.7);
+            justify-content: flex-end;
+        }
+
+        .message-group.received .message-time {
+            color: var(--text-tertiary);
+        }
+
+        .read-status {
+            width: 14px;
+            height: 14px;
+        }
+
+        .read-status svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--message-received);
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            width: fit-content;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--text-tertiary);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Message Input */
+        .message-input-container {
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            font-size: 15px;
+            font-family: 'IBM Plex Sans', sans-serif;
+            resize: none;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(45, 90, 77, 0.08);
+        }
+
+        .attachment-btn {
+            position: absolute;
+            right: 12px;
+            bottom: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .attachment-btn:hover {
+            background: rgba(45, 90, 77, 0.08);
+        }
+
+        .attachment-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-tertiary);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(45, 90, 77, 0.3);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(45, 90, 77, 0.4);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .send-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke: white;
+            fill: none;
+            stroke-width: 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="chat-header">
+            <a href="index.html" class="back-btn">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </a>
+            <div class="contact-info">
+                <div class="contact-avatar online">SA</div>
+                <div class="contact-details">
+                    <h2>Sarah Anderson</h2>
+                    <div class="contact-status">online</div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </button>
+                <button class="icon-btn">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <div class="messages-container">
+            <div class="date-divider">
+                <span class="date-label">Today</span>
+            </div>
+
+            <div class="message-group received">
+                <div class="message-bubble">
+                    <div class="message-text">Hey! How are you doing?</div>
+                </div>
+                <div class="message-time">10:30 AM</div>
+            </div>
+
+            <div class="message-group sent">
+                <div class="message-bubble">
+                    <div class="message-text">I'm doing great, thanks! How about you?</div>
+                </div>
+                <div class="message-time">
+                    10:32 AM
+                    <span class="read-status">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/><polyline points="20 6 9 17"/></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div class="message-group received">
+                <div class="message-bubble">
+                    <div class="message-text">Pretty good! I wanted to ask you about the meeting tomorrow.</div>
+                </div>
+                <div class="message-bubble">
+                    <div class="message-text">Do you have time to discuss the presentation?</div>
+                </div>
+                <div class="message-time">10:35 AM</div>
+            </div>
+
+            <div class="message-group sent">
+                <div class="message-bubble">
+                    <div class="message-text">Sure! I'm free after 2pm</div>
+                </div>
+                <div class="message-time">
+                    10:38 AM
+                    <span class="read-status">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/><polyline points="20 6 9 17"/></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div class="message-group received">
+                <div class="message-bubble">
+                    <div class="message-text">Perfect! How about we meet at 3pm in the conference room?</div>
+                </div>
+                <div class="message-time">2:30 PM</div>
+            </div>
+
+            <div class="message-group sent">
+                <div class="message-bubble">
+                    <div class="message-text">That sounds perfect! Let's meet at 3pm tomorrow</div>
+                </div>
+                <div class="message-time">
+                    2:34 PM
+                    <span class="read-status">
+                        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                </div>
+            </div>
+
+            <div class="typing-indicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="message-input-container">
+            <div class="input-wrapper">
+                <textarea class="message-input" placeholder="Type a message..." rows="1"></textarea>
+                <button class="attachment-btn">
+                    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                </button>
+            </div>
+            <button class="send-btn">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Auto-resize textarea
+        const textarea = document.querySelector('.message-input');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+
+        // Smooth scroll to bottom
+        const messagesContainer = document.querySelector('.messages-container');
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    </script>
+</body>
+</html>
